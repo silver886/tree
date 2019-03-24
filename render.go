@@ -12,9 +12,11 @@ type Style struct {
 
 func (t *Tree) String() string {
 	b := &bytes.Buffer{}
-	for _, v := range t.roots {
+	for i, v := range t.roots {
+		if i > 0 && b.String()[b.Len()-2] != '^' {
+			b.WriteString(", ")
+		}
 		b.WriteString(v.String())
-		b.WriteString(", ")
 	}
 	return b.String()
 }
@@ -24,9 +26,11 @@ func (n *Node) String() string {
 	b.WriteString(n.content)
 	if len(n.children) > 0 {
 		b.WriteString(" > ")
-		for _, v := range n.children {
+		for i, v := range n.children {
+			if i > 0 && b.String()[b.Len()-2] != '^' {
+				b.WriteString(", ")
+			}
 			b.WriteString(v.String())
-			b.WriteString(", ")
 		}
 		b.WriteString(" ^ ")
 	}
