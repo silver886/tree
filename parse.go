@@ -34,22 +34,27 @@ func ParseIndent(r io.Reader) (*Tree, error) {
 				return nil, errors.New("Cannot add a root")
 			}
 			nodeTempList = append(nodeTempList, n)
-		} else if v.indent == lineList[i-1].indent {
-			if nodeTempList[len(nodeTempList)-1].AddSiblings([]*Node{n}) != nil {
-				return nil, errors.New("Cannot add a sibling")
+		} else {
+			switch v.indent - lineList[i-1].indent {
+			case 0:
+				if nodeTempList[len(nodeTempList)-1].AddSiblings([]*Node{n}) != nil {
+					return nil, errors.New("Cannot add a sibling")
+				}
+				nodeTempList[len(nodeTempList)-1] = n
+			case 1:
+				if nodeTempList[len(nodeTempList)-1].AddChildren([]*Node{n}) != nil {
+					return nil, errors.New("Cannot add a child")
+				}
+				nodeTempList = append(nodeTempList, n)
+			case -1:
+				nodeTempList = nodeTempList[:len(nodeTempList)-1]
+				if nodeTempList[len(nodeTempList)-1].AddSiblings([]*Node{n}) != nil {
+					return nil, errors.New("Cannot add a sibling")
+				}
+				nodeTempList[len(nodeTempList)-1] = n
+			default:
+				return nil, errors.New("Abnormal indentation")
 			}
-			nodeTempList[len(nodeTempList)-1] = n
-		} else if v.indent > lineList[i-1].indent {
-			if nodeTempList[len(nodeTempList)-1].AddChildren([]*Node{n}) != nil {
-				return nil, errors.New("Cannot add a child")
-			}
-			nodeTempList = append(nodeTempList, n)
-		} else if v.indent < lineList[i-1].indent {
-			nodeTempList = nodeTempList[:len(nodeTempList)-1]
-			if nodeTempList[len(nodeTempList)-1].AddSiblings([]*Node{n}) != nil {
-				return nil, errors.New("Cannot add a sibling")
-			}
-			nodeTempList[len(nodeTempList)-1] = n
 		}
 	}
 
