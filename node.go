@@ -12,7 +12,7 @@ type Node struct {
 	content string
 }
 
-// GetParent return the parent node of certain node
+// GetParent return the parent node of current node
 func (n *Node) GetParent() (*Node, error) {
 	if n.parent == nil {
 		return nil, errors.New("No parent node found")
@@ -25,7 +25,7 @@ func (n *Node) unsafeSetParent(node *Node) {
 	n.parent = node
 }
 
-// SetParent set the parent node of certain node
+// SetParent set the parent node of current node
 func (n *Node) SetParent(node *Node) error {
 	if n.parent != nil {
 		return errors.New("Already have a parent node")
@@ -46,7 +46,7 @@ func (n *Node) unsafeRemoveParent() {
 	n.parent = nil
 }
 
-// RemoveParent remove the parent node of certain node
+// RemoveParent remove the parent node of current node
 func (n *Node) RemoveParent() error {
 	if n.parent == nil {
 		return errors.New("No parent node to remove")
@@ -57,7 +57,7 @@ func (n *Node) RemoveParent() error {
 	return nil
 }
 
-// GetChildren return the child node list of certain node
+// GetChildren return the child node list of current node
 func (n *Node) GetChildren() ([]*Node, error) {
 	if len(n.children) == 0 {
 		return nil, errors.New("No child nodes found")
@@ -71,7 +71,7 @@ func (n *Node) unsafeAddChildren(list []*Node) {
 	}
 }
 
-// AddChildren add the child node list of certain node
+// AddChildren add the child node list of current node
 func (n *Node) AddChildren(list []*Node) error {
 	for _, v := range list {
 		if v.parent != nil {
@@ -90,7 +90,7 @@ func (n *Node) unsafeRemoveChildren(list []*Node) {
 	}
 }
 
-// RemoveChildren remove the child node list of certain node
+// RemoveChildren remove the child node list of current node
 func (n *Node) RemoveChildren(list []*Node) error {
 	for _, v := range list {
 		if v.parent != n {
@@ -103,7 +103,7 @@ func (n *Node) RemoveChildren(list []*Node) error {
 	return nil
 }
 
-// GetSiblings return the sibling node list of certain node
+// GetSiblings return the sibling node list of current node
 func (n *Node) GetSiblings() ([]*Node, error) {
 	if n.parent == nil {
 		if n.tree == nil || len(n.tree.roots) == 0 {
@@ -126,7 +126,7 @@ func (n *Node) unsafeAddSiblings(list []*Node) {
 	}
 }
 
-// AddSiblings add the sibling node list of certain node
+// AddSiblings add the sibling node list of current node
 func (n *Node) AddSiblings(list []*Node) error {
 	if n.parent == nil && n.tree == nil {
 		return errors.New("No available sibling node list")
@@ -151,7 +151,7 @@ func (n *Node) unsafeRemoveSiblings(list []*Node) {
 	}
 }
 
-// RemoveSiblings remove the sibling node list of certain node
+// RemoveSiblings remove the sibling node list of current node
 func (n *Node) RemoveSiblings(list []*Node) error {
 	if n.parent == nil && n.tree == nil {
 		return errors.New("No available sibling node list")
@@ -168,7 +168,7 @@ func (n *Node) RemoveSiblings(list []*Node) error {
 	return nil
 }
 
-// GetTree return the tree of certain node
+// GetTree return the tree of current node
 func (n *Node) GetTree() (*Tree, error) {
 	if n.tree == nil {
 		return nil, errors.New("No tree found")
@@ -181,7 +181,7 @@ func (n *Node) unsafeSetTree(tree *Tree) {
 	n.tree = tree
 }
 
-// SetTree set the tree of certain node
+// SetTree set the tree of current node
 func (n *Node) SetTree(tree *Tree) error {
 	if n.tree != nil {
 		return errors.New("Already have a tree")
@@ -202,7 +202,7 @@ func (n *Node) unsafeRemoveTree() {
 	n.tree = nil
 }
 
-// RemoveTree remove the tree of certain node
+// RemoveTree remove the tree of current node
 func (n *Node) RemoveTree() error {
 	if n.tree == nil {
 		return errors.New("No tree to remove")
