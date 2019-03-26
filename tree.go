@@ -37,12 +37,6 @@ func (t *Tree) AddRoots(list []*Node) error {
 	return nil
 }
 
-func (t *Tree) unsafeRemoveRoots(list []*Node) {
-	for _, v := range list {
-		v.unsafeRemoveTree()
-	}
-}
-
 // RemoveRoots remove the root node list of certain node
 func (t *Tree) RemoveRoots(list []*Node) error {
 	for _, v := range list {
