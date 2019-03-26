@@ -212,3 +212,14 @@ func (n *Node) RemoveTree() error {
 
 	return nil
 }
+
+// GetIndent find the indentation of current node
+func (n *Node) GetIndent() int {
+	for i, tempNode := 0, n; ; i++ {
+		if n, err := tempNode.GetParent(); err == nil {
+			tempNode = n
+		} else {
+			return i
+		}
+	}
+}
