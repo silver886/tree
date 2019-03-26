@@ -35,6 +35,10 @@ func generateLineList(r io.Reader) ([]*line, error) {
 		}
 	}
 
+	if len(lineList) == 0 {
+		return nil, errors.New("Nothing to parse")
+	}
+
 	lineList, err := generalizeIndent(lineList)
 	if err != nil {
 		return nil, err
