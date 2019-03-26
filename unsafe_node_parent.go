@@ -4,7 +4,7 @@ func (n *Node) unsafeSetParent(node *Node) {
 	n.prefix = append([]byte{}, node.prefix...)
 	for i := range n.prefix {
 		if n.prefix[i]&1 == 0 {
-			n.prefix[i]++
+			n.prefix[i] |= 1
 		}
 	}
 	node.children = append(node.children, n)
