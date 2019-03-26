@@ -78,29 +78,30 @@ func (t *Tree) Render() (string, error) {
 	return buf.String(), nil
 }
 
-func (t *Tree) String() string {
-	b := &bytes.Buffer{}
-	for i, v := range t.roots {
-		if i > 0 && b.String()[b.Len()-2] != '^' {
-			b.WriteString(", ")
+func stringNodeList(list []*Node) string {
+	buf := &bytes.Buffer{}
+	for i, v := range list {
+		if i > 0 && buf.String()[buf.Len()-2] != '^' {
+			buf.WriteString(", ")
 		}
-		b.WriteString(v.String())
+		buf.WriteString(v.String())
 	}
-	return b.String()
+	return buf.String()
 }
 
 func (n *Node) String() string {
-	b := &bytes.Buffer{}
-	b.WriteString(n.content)
+	buf := &bytes.Buffer{}
+	buf.WriteString(n.content)
 	if len(n.children) > 0 {
-		b.WriteString(" > ")
-		for i, v := range n.children {
-			if i > 0 && b.String()[b.Len()-2] != '^' {
-				b.WriteString(", ")
-			}
-			b.WriteString(v.String())
-		}
-		b.WriteString(" ^ ")
+		buf.WriteString(" > ")
+		buf.WriteString(stringNodeList(n.children))
+		buf.WriteString(" ^ ")
 	}
-	return b.String()
+	return buf.String()
+}
+
+func (t *Tree) String() string {
+	buf := &bytes.Buffer{}
+	buf.WriteString(stringNodeList(t.roots))
+	return buf.String()
 }
