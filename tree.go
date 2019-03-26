@@ -18,12 +18,6 @@ func (t *Tree) GetRoots() ([]*Node, error) {
 	return t.roots, nil
 }
 
-func (t *Tree) unsafeAddRoots(nodes []*Node) {
-	for _, v := range nodes {
-		v.unsafeSetTree(t)
-	}
-}
-
 // AddRoots add the root node list of certain node
 func (t *Tree) AddRoots(nodes []*Node) error {
 	for _, v := range nodes {
