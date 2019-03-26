@@ -7,7 +7,7 @@ import (
 // Tree is the structure of tree
 type Tree struct {
 	roots []*Node
-	style *Style
+	Style *Style
 }
 
 // GetRoots return the root node list of certain node
