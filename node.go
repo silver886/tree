@@ -1,6 +1,8 @@
 package tree
 
-import "errors"
+import (
+	"errors"
+)
 
 // Node is the structure of node
 type Node struct {
@@ -9,7 +11,31 @@ type Node struct {
 	parent   *Node
 	children []*Node
 
+	prefix  []byte
 	content string
+}
+
+func (n *Node) unsafeSetPrefix(indent int, prefix byte) {
+	for _, v := range n.children {
+		v.unsafeSetPrefix(indent, prefix|1)
+	}
+	if indent--; indent == len(n.prefix) {
+		n.prefix = append(n.prefix, prefix)
+	} else {
+		n.prefix[indent] = prefix
+	}
+}
+
+func (n *Node) setPrefix(indent int, prefix byte) error {
+	if indent < 1 || indent > len(n.prefix)+1 {
+		return errors.New("Invalid indent")
+	} else if prefix > 3 {
+		return errors.New("Invalid prefix")
+	}
+
+	n.unsafeSetPrefix(indent, prefix)
+
+	return nil
 }
 
 // GetParent return the parent node of current node
@@ -21,8 +47,19 @@ func (n *Node) GetParent() (*Node, error) {
 }
 
 func (n *Node) unsafeSetParent(node *Node) {
+	n.prefix = append([]byte{}, node.prefix...)
+	for i := range n.prefix {
+		if n.prefix[i]&1 == 0 {
+			n.prefix[i]++
+		}
+	}
 	node.children = append(node.children, n)
 	n.parent = node
+	indent := n.GetIndent()
+	n.unsafeSetPrefix(indent, 2)
+	if len(node.children) > 1 {
+		node.children[len(node.children)-2].unsafeSetPrefix(indent, 0)
+	}
 }
 
 // SetParent set the parent node of current node
@@ -37,12 +74,16 @@ func (n *Node) SetParent(node *Node) error {
 }
 
 func (n *Node) unsafeRemoveParent() {
+	if len(n.parent.children) > 1 && n.prefix[len(n.prefix)-1] == '2' {
+		n.parent.children[len(n.parent.children)-2].unsafeSetPrefix(n.GetIndent(), 2)
+	}
 	for i, v := range n.parent.children {
 		if v == n {
 			n.parent.children = append(n.parent.children[:i], n.parent.children[i+1:]...)
 			continue
 		}
 	}
+	n.prefix = nil
 	n.parent = nil
 }
 
