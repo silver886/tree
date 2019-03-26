@@ -15,18 +15,6 @@ type Node struct {
 	content string
 }
 
-func (n *Node) setPrefix(indent int, prefix byte) error {
-	if indent < 1 || indent > len(n.prefix)+1 {
-		return errors.New("Invalid indent")
-	} else if prefix > 3 {
-		return errors.New("Invalid prefix")
-	}
-
-	n.unsafeSetPrefix(indent, prefix)
-
-	return nil
-}
-
 // GetParent return the parent node of current node
 func (n *Node) GetParent() (*Node, error) {
 	if n.parent == nil {
@@ -179,4 +167,16 @@ func (n *Node) GetIndent() int {
 			return i
 		}
 	}
+}
+
+func (n *Node) setPrefix(indent int, prefix byte) error {
+	if indent < 1 || indent > len(n.prefix)+1 {
+		return errors.New("Invalid indent")
+	} else if prefix > 3 {
+		return errors.New("Invalid prefix")
+	}
+
+	n.unsafeSetPrefix(indent, prefix)
+
+	return nil
 }
