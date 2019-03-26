@@ -1,7 +1,5 @@
 package tree
 
-import "errors"
-
 // Style define the outlook of the tree
 type Style struct {
 	Node  string
@@ -10,17 +8,17 @@ type Style struct {
 	Space string
 }
 
-func (s *Style) getPrefix(b byte) (string, error) {
+func (s *Style) getPrefix(b byte) string {
 	switch b {
 	case 0:
-		return s.Node, nil
+		return s.Node
 	case 1:
-		return s.Line, nil
+		return s.Line
 	case 2:
-		return s.End, nil
+		return s.End
 	case 3:
-		return s.Space, nil
+		return s.Space
 	default:
-		return "", errors.New("Invalid prefix")
+		return ""
 	}
 }

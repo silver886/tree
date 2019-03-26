@@ -6,19 +6,13 @@ import (
 	"io"
 )
 
-func renderNode(buf *bytes.Buffer, node *Node, style *Style) error {
+func renderNode(buf *bytes.Buffer, node *Node, style *Style) {
 	for _, v := range node.prefix {
-		prefix, err := style.getPrefix(v)
-		if err != nil {
-			return err
-		}
-		buf.WriteString(prefix)
+		buf.WriteString(style.getPrefix(v))
 	}
 
 	buf.WriteString(node.content)
 	buf.WriteRune('\n')
-
-	return nil
 }
 
 func renderNodeList(buf *bytes.Buffer, nodeList []*Node, style *Style) error {
@@ -39,10 +33,9 @@ func (n *Node) Render(style *Style) (io.Reader, error) {
 	}
 
 	buf := &bytes.Buffer{}
+	renderNode(buf, n, style)
 
-	if err := renderNode(buf, n, style); err != nil {
-		return nil, err
-	} else if err := renderNodeList(buf, n.children, style); err != nil {
+	if err := renderNodeList(buf, n.children, style); err != nil {
 		return nil, err
 	}
 
