@@ -35,25 +35,23 @@ func ParseIndent(r io.Reader) (*Tree, error) {
 			}
 			nodeTempList = append(nodeTempList, n)
 		} else {
-			switch v.indent - lineList[i-1].indent {
-			case 0:
-				if nodeTempList[len(nodeTempList)-1].AddSiblings([]*Node{n}) != nil {
-					return nil, errors.New("Cannot add a sibling")
-				}
-				nodeTempList[len(nodeTempList)-1] = n
+			switch indent := v.indent - lineList[i-1].indent; indent {
 			case 1:
 				if nodeTempList[len(nodeTempList)-1].AddChildren([]*Node{n}) != nil {
 					return nil, errors.New("Cannot add a child")
 				}
 				nodeTempList = append(nodeTempList, n)
-			case -1:
-				nodeTempList = nodeTempList[:len(nodeTempList)-1]
+			default:
+				if indent > 0 {
+					return nil, errors.New("Abnormal indentation")
+				}
+				nodeTempList = nodeTempList[:len(nodeTempList)+indent]
+				fallthrough
+			case 0:
 				if nodeTempList[len(nodeTempList)-1].AddSiblings([]*Node{n}) != nil {
 					return nil, errors.New("Cannot add a sibling")
 				}
 				nodeTempList[len(nodeTempList)-1] = n
-			default:
-				return nil, errors.New("Abnormal indentation")
 			}
 		}
 	}
