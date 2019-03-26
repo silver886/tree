@@ -6,28 +6,13 @@ import (
 	"io"
 )
 
-// Style define the outlook of the tree
-type Style struct {
-	Node  string
-	Line  string
-	End   string
-	Space string
-}
-
 func renderNode(buf *bytes.Buffer, node *Node, style *Style) error {
 	for _, v := range node.prefix {
-		switch v {
-		case 0:
-			buf.WriteString(style.Node)
-		case 1:
-			buf.WriteString(style.Line)
-		case 2:
-			buf.WriteString(style.End)
-		case 3:
-			buf.WriteString(style.Space)
-		default:
-			return errors.New("Invalid prefix")
+		prefix, err := style.prefix(v)
+		if err != nil {
+			return err
 		}
+		buf.WriteString(prefix)
 	}
 
 	buf.WriteString(node.content)
