@@ -8,7 +8,7 @@ import (
 
 func renderNode(buf *bytes.Buffer, node *Node, style *Style) error {
 	for _, v := range node.prefix {
-		prefix, err := style.prefix(v)
+		prefix, err := style.getPrefix(v)
 		if err != nil {
 			return err
 		}

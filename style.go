@@ -10,7 +10,7 @@ type Style struct {
 	Space string
 }
 
-func (s *Style) prefix(b byte) (string, error) {
+func (s *Style) getPrefix(b byte) (string, error) {
 	switch b {
 	case 0:
 		return s.Node, nil
