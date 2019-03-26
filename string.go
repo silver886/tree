@@ -5,9 +5,9 @@ import (
 	"io"
 )
 
-func stringNodeList(list []*Node) io.Reader {
+func stringNodeList(nodeList []*Node) io.Reader {
 	buf := &bytes.Buffer{}
-	for i, v := range list {
+	for i, v := range nodeList {
 		if i > 0 && buf.String()[buf.Len()-2] != '^' {
 			buf.WriteString(", ")
 		}

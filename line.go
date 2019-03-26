@@ -47,14 +47,14 @@ func generateLineList(r io.Reader) ([]*line, error) {
 	return lineList, nil
 }
 
-func appendLineList(list []*line, str string) []*line {
+func appendLineList(lineList []*line, str string) []*line {
 	if indent, content := parseLine(str); len(content) != 0 {
-		list = append(list, &line{
+		lineList = append(lineList, &line{
 			indent:  indent,
 			content: content,
 		})
 	}
-	return list
+	return lineList
 }
 
 func parseLine(str string) (int, string) {
@@ -66,9 +66,9 @@ func parseLine(str string) (int, string) {
 	return 0, ""
 }
 
-func generalizeIndent(list []*line) ([]*line, error) {
+func generalizeIndent(lines []*line) ([]*line, error) {
 	var indents []int
-	for _, v := range list {
+	for _, v := range lines {
 		indents = append(indents, v.indent)
 	}
 
@@ -77,11 +77,11 @@ func generalizeIndent(list []*line) ([]*line, error) {
 		return nil, err
 	}
 
-	for i := range list {
-		list[i].indent = list[i].indent / indent
+	for i := range lines {
+		lines[i].indent = lines[i].indent / indent
 	}
 
-	return list, nil
+	return lines, nil
 }
 
 func calculateIndent(indents []int) (int, error) {

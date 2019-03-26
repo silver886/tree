@@ -1,17 +1,17 @@
 package tree
 
-func (n *Node) unsafeAddSiblings(list []*Node) {
+func (n *Node) unsafeAddSiblings(nodes []*Node) {
 	if n.parent != nil {
-		n.parent.unsafeAddChildren(list)
+		n.parent.unsafeAddChildren(nodes)
 	} else if n.tree != nil {
-		n.tree.unsafeAddRoots(list)
+		n.tree.unsafeAddRoots(nodes)
 	}
 }
 
-func (n *Node) unsafeRemoveSiblings(list []*Node) {
+func (n *Node) unsafeRemoveSiblings(nodes []*Node) {
 	if n.parent != nil {
-		n.parent.unsafeRemoveChildren(list)
+		n.parent.unsafeRemoveChildren(nodes)
 	} else if n.tree != nil {
-		n.tree.unsafeRemoveRoots(list)
+		n.tree.unsafeRemoveRoots(nodes)
 	}
 }

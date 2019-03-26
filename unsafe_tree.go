@@ -1,7 +1,7 @@
 package tree
 
-func (t *Tree) unsafeRemoveRoots(list []*Node) {
-	for _, v := range list {
+func (t *Tree) unsafeRemoveRoots(nodes []*Node) {
+	for _, v := range nodes {
 		v.unsafeRemoveTree()
 	}
 }

@@ -21,8 +21,8 @@ func renderNode(buf *bytes.Buffer, node *Node, style *Style) error {
 	return nil
 }
 
-func renderNodeList(buf *bytes.Buffer, list []*Node, style *Style) error {
-	for _, v := range list {
+func renderNodeList(buf *bytes.Buffer, nodeList []*Node, style *Style) error {
+	for _, v := range nodeList {
 		str, err := v.Render(style)
 		if err != nil {
 			return err
