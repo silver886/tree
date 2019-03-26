@@ -3,6 +3,7 @@ package tree
 import (
 	"bytes"
 	"errors"
+	"io"
 )
 
 // Style define the outlook of the tree
@@ -41,44 +42,44 @@ func renderNodeList(buf *bytes.Buffer, list []*Node, style *Style) error {
 		if err != nil {
 			return err
 		}
-		buf.WriteString(str)
+		buf.ReadFrom(str)
 	}
 	return nil
 }
 
 // Render generate the node structure in string with given style
-func (n *Node) Render(style *Style) (string, error) {
+func (n *Node) Render(style *Style) (io.Reader, error) {
 	if style == nil {
-		return "", errors.New("No style found")
+		return nil, errors.New("No style found")
 	}
 
 	buf := &bytes.Buffer{}
 
 	if err := renderNode(buf, n, style); err != nil {
-		return "", err
+		return nil, err
 	} else if err := renderNodeList(buf, n.children, style); err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return buf.String(), nil
+	return buf, nil
 }
 
 // Render generate the tree structure in string with its style
-func (t *Tree) Render() (string, error) {
+func (t *Tree) Render() (io.Reader, error) {
 	if t.Style == nil {
-		return "", errors.New("No style found")
+		return nil, errors.New("No style found")
 	}
 
 	buf := &bytes.Buffer{}
 
 	if err := renderNodeList(buf, t.roots, t.Style); err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return buf.String(), nil
+	return buf, nil
 }
 
-func stringNodeList(list []*Node) string {
+func stringNodeList(list []*Node) io.Reader {
 	buf := &bytes.Buffer{}
 	for i, v := range list {
 		if i > 0 && buf.String()[buf.Len()-2] != '^' {
@@ -86,7 +87,7 @@ func stringNodeList(list []*Node) string {
 		}
 		buf.WriteString(v.String())
 	}
-	return buf.String()
+	return buf
 }
 
 func (n *Node) String() string {
@@ -94,7 +95,7 @@ func (n *Node) String() string {
 	buf.WriteString(n.content)
 	if len(n.children) > 0 {
 		buf.WriteString(" > ")
-		buf.WriteString(stringNodeList(n.children))
+		buf.ReadFrom(stringNodeList(n.children))
 		buf.WriteString(" ^ ")
 	}
 	return buf.String()
@@ -102,6 +103,6 @@ func (n *Node) String() string {
 
 func (t *Tree) String() string {
 	buf := &bytes.Buffer{}
-	buf.WriteString(stringNodeList(t.roots))
+	buf.ReadFrom(stringNodeList(t.roots))
 	return buf.String()
 }
