@@ -169,6 +169,15 @@ func (n *Node) GetIndent() int {
 	}
 }
 
+// GetPrefix return the prefix of current node
+func (n *Node) GetPrefix(style *Style) (string, error) {
+	if style == nil {
+		return "", errors.New("No style found")
+	}
+
+	return n.unsafeGetPrefix(style), nil
+}
+
 func (n *Node) setPrefix(indent int, prefix byte) error {
 	if indent < 1 || indent > len(n.prefix)+1 {
 		return errors.New("Invalid indent")
