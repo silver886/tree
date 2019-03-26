@@ -4,8 +4,8 @@ import "bytes"
 
 // Style define the outlook of the tree
 type Style struct {
-	Line  string
 	Node  string
+	Line  string
 	End   string
 	Space string
 }
