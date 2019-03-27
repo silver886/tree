@@ -1,5 +1,7 @@
 package tree
 
+import "bytes"
+
 // Style define the outlook of the tree
 type Style struct {
 	Node  string
@@ -8,17 +10,22 @@ type Style struct {
 	Space string
 }
 
-func (s *Style) getPrefix(b byte) string {
-	switch b {
-	case 0:
-		return s.Node
-	case 1:
-		return s.Line
-	case 2:
-		return s.End
-	case 3:
-		return s.Space
-	default:
-		return ""
+func (s *Style) getPrefix(b []byte) string {
+	buf := &bytes.Buffer{}
+	for _, v := range b {
+		switch v {
+		case 0:
+			buf.WriteString(s.Node)
+		case 1:
+			buf.WriteString(s.Line)
+		case 2:
+			buf.WriteString(s.End)
+		case 3:
+			buf.WriteString(s.Space)
+		default:
+			buf.Reset()
+			break
+		}
 	}
+	return buf.String()
 }

@@ -43,3 +43,37 @@ func (t *Tree) RemoveRoots(nodes []*Node) error {
 
 	return nil
 }
+
+// GetNodeList return the node list from current node
+func (t *Tree) GetNodeList() ([]*Node, error) {
+	roots, err := t.GetRoots()
+	if err != nil {
+		return nil, err
+	}
+
+	var nodeList []*Node
+	for _, v := range roots {
+		nodeList = append(nodeList, v.GetNodeList()...)
+	}
+
+	return nodeList, nil
+}
+
+// GetPrefixList return the prefix list
+func (t *Tree) GetPrefixList() ([]string, error) {
+	if t.Style == nil {
+		return nil, errors.New("No style found")
+	}
+
+	nodeList, err := t.GetNodeList()
+	if err != nil {
+		return nil, err
+	}
+
+	var prefixList []string
+	for _, v := range nodeList {
+		prefixList = append(prefixList, t.Style.getPrefix(v.prefix))
+	}
+
+	return prefixList, nil
+}

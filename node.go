@@ -169,15 +169,6 @@ func (n *Node) GetIndent() int {
 	}
 }
 
-// GetPrefix return the prefix of current node
-func (n *Node) GetPrefix(style *Style) (string, error) {
-	if style == nil {
-		return "", errors.New("No style found")
-	}
-
-	return n.unsafeGetPrefix(style), nil
-}
-
 func (n *Node) setPrefix(indent int, prefix byte) error {
 	if indent < 1 || indent > len(n.prefix)+1 {
 		return errors.New("Invalid indent")
@@ -188,4 +179,39 @@ func (n *Node) setPrefix(indent int, prefix byte) error {
 	n.unsafeSetPrefix(indent, prefix)
 
 	return nil
+}
+
+// GetNodeList return the node list from current node
+func (n *Node) GetNodeList() []*Node {
+	var nodeList []*Node
+	nodeList = append(nodeList, n)
+
+	for _, v := range n.children {
+		nodeList = append(nodeList, v.GetNodeList()...)
+	}
+
+	return nodeList
+}
+
+func (n *Node) getRawPrefixList() [][]byte {
+	var prefixList [][]byte
+	for _, v := range n.GetNodeList() {
+		prefixList = append(prefixList, v.prefix)
+	}
+	return prefixList
+}
+
+// GetPrefixList return the prefix list
+func (n *Node) GetPrefixList(style *Style) ([]string, error) {
+	if style == nil {
+		return nil, errors.New("No style found")
+	}
+
+	var prefixList []string
+	prefix := len(n.prefix)
+	for _, v := range n.getRawPrefixList() {
+		prefixList = append(prefixList, style.getPrefix(v[prefix:]))
+	}
+
+	return prefixList, nil
 }
