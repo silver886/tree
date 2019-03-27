@@ -18,7 +18,7 @@ func stringNodeList(nodeList []*Node) io.Reader {
 
 func (n *Node) String() string {
 	buf := &bytes.Buffer{}
-	buf.WriteString(n.content)
+	buf.WriteString(n.Content)
 	if len(n.children) > 0 {
 		buf.WriteString(" > ")
 		buf.ReadFrom(stringNodeList(n.children))

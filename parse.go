@@ -27,7 +27,7 @@ func ParseIndent(r io.Reader) (*Tree, error) {
 
 	for i, v := range lineList {
 		n := &Node{
-			content: v.content,
+			Content: v.content,
 		}
 		if len(tempNodes) == 0 {
 			if tree.AddRoots([]*Node{n}) != nil {

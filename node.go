@@ -12,7 +12,7 @@ type Node struct {
 	children []*Node
 
 	prefix  []byte
-	content string
+	Content string
 }
 
 // GetParent return the parent node of current node

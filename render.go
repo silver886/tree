@@ -8,7 +8,7 @@ import (
 
 func renderNode(buf *bytes.Buffer, node *Node, indent int, style *Style) {
 	buf.WriteString(style.getPrefix(node.prefix[indent:]))
-	buf.WriteString(node.content)
+	buf.WriteString(node.Content)
 	buf.WriteByte('\n')
 }
 
