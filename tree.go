@@ -8,6 +8,9 @@ import (
 type Tree struct {
 	roots []*Node
 	Style *Style
+
+	lastIndent int
+	lastNodes  []*Node
 }
 
 // GetRoots return the root node list of certain node
@@ -57,6 +60,37 @@ func (t *Tree) GetNodeList() ([]*Node, error) {
 	}
 
 	return nodeList, nil
+}
+
+// AddNode to current tree with certain indent
+func (t *Tree) AddNode(indent int, node *Node) error {
+	if len(t.lastNodes) == 0 {
+		if t.AddRoots([]*Node{node}) != nil {
+			return errors.New("Cannot add a root")
+		}
+		t.lastNodes = append(t.lastNodes, node)
+	} else {
+		switch i := indent - t.lastIndent; i {
+		case 1:
+			if t.lastNodes[len(t.lastNodes)-1].AddChildren([]*Node{node}) != nil {
+				return errors.New("Cannot add a child")
+			}
+			t.lastNodes = append(t.lastNodes, node)
+		default:
+			if i > 0 {
+				return errors.New("Abnormal indentation")
+			}
+			t.lastNodes = t.lastNodes[:len(t.lastNodes)+i]
+			fallthrough
+		case 0:
+			if t.lastNodes[len(t.lastNodes)-1].AddSiblings([]*Node{node}) != nil {
+				return errors.New("Cannot add a sibling")
+			}
+			t.lastNodes[len(t.lastNodes)-1] = node
+		}
+		t.lastIndent = indent
+	}
+	return nil
 }
 
 // GetPrefixList return the prefix list

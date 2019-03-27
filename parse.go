@@ -15,35 +15,9 @@ func ParseIndentList(indentList []int) (*Tree, error) {
 	}
 
 	tree := &Tree{}
-
-	var tempNodes []*Node
-
-	for i, v := range indentList {
-		n := &Node{}
-		if len(tempNodes) == 0 {
-			if tree.AddRoots([]*Node{n}) != nil {
-				return nil, errors.New("Cannot add a root")
-			}
-			tempNodes = append(tempNodes, n)
-		} else {
-			switch indent := v - indentList[i-1]; indent {
-			case 1:
-				if tempNodes[len(tempNodes)-1].AddChildren([]*Node{n}) != nil {
-					return nil, errors.New("Cannot add a child")
-				}
-				tempNodes = append(tempNodes, n)
-			default:
-				if indent > 0 {
-					return nil, errors.New("Abnormal indentation")
-				}
-				tempNodes = tempNodes[:len(tempNodes)+indent]
-				fallthrough
-			case 0:
-				if tempNodes[len(tempNodes)-1].AddSiblings([]*Node{n}) != nil {
-					return nil, errors.New("Cannot add a sibling")
-				}
-				tempNodes[len(tempNodes)-1] = n
-			}
+	for _, v := range indentList {
+		if err := tree.AddNode(v, &Node{}); err != nil {
+			return nil, err
 		}
 	}
 
@@ -62,37 +36,11 @@ func ParseIndent(r io.Reader) (*Tree, error) {
 	}
 
 	tree := &Tree{}
-
-	var tempNodes []*Node
-
-	for i, v := range lineList {
-		n := &Node{
+	for _, v := range lineList {
+		if err := tree.AddNode(v.indent, &Node{
 			Content: v.content,
-		}
-		if len(tempNodes) == 0 {
-			if tree.AddRoots([]*Node{n}) != nil {
-				return nil, errors.New("Cannot add a root")
-			}
-			tempNodes = append(tempNodes, n)
-		} else {
-			switch indent := v.indent - lineList[i-1].indent; indent {
-			case 1:
-				if tempNodes[len(tempNodes)-1].AddChildren([]*Node{n}) != nil {
-					return nil, errors.New("Cannot add a child")
-				}
-				tempNodes = append(tempNodes, n)
-			default:
-				if indent > 0 {
-					return nil, errors.New("Abnormal indentation")
-				}
-				tempNodes = tempNodes[:len(tempNodes)+indent]
-				fallthrough
-			case 0:
-				if tempNodes[len(tempNodes)-1].AddSiblings([]*Node{n}) != nil {
-					return nil, errors.New("Cannot add a sibling")
-				}
-				tempNodes[len(tempNodes)-1] = n
-			}
+		}); err != nil {
+			return nil, err
 		}
 	}
 
