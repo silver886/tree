@@ -3,12 +3,13 @@ package tree
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 )
 
 func renderNode(buf *bytes.Buffer, node *Node, indent int, style *Style) {
 	buf.WriteString(style.getPrefix(node.prefix[indent:]))
-	buf.WriteString(node.Content)
+	buf.WriteString(fmt.Sprint(node.Content))
 	buf.WriteByte('\n')
 }
 
