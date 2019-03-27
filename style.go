@@ -10,9 +10,9 @@ type Style struct {
 	Space string
 }
 
-func (s *Style) getPrefix(b []byte) string {
+func (s *Style) getPrefix(indents []byte) string {
 	buf := &bytes.Buffer{}
-	for _, v := range b {
+	for _, v := range indents {
 		switch v {
 		case 0:
 			buf.WriteString(s.Node)
